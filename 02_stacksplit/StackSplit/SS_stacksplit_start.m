@@ -71,7 +71,7 @@ function SS_stacksplit_start
 %
 % Wüstefeld, A. (2007), Methods and applications of shear wave splitting:
 %    The East European Craton. PhD thesis, Univ. de Montpellier, France, 
-%    http://splitting.gm.univ-montp2.fr/, last accessed 11 January 2019.
+%    https://splitting.gm.univ-montp2.fr/, last accessed 18 July 2025.
 % 
 % Restivo & Helffrich (1999), Teleseismic shear wave splitting
 %    measurements in noisy environments, GJI 137, 821-830,

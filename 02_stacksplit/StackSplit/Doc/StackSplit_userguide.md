@@ -37,7 +37,7 @@
 
 ## Requirements
 
-StackSplit should run on every operating system on which the original [SplitLab](http://splitting.gm.univ-montp2.fr/)
+StackSplit should run on every operating system on which the original [SplitLab](https://splitting.gm.univ-montp2.fr)
 package runs. Thus, MATLAB 7.0 or higher, the Mapping Toolbox and for full functionality the Signal Processing
 Toolbox are required. If MATLAB R2014b or higher is running on your system or no license for the
 Mapping Toolbox is available, I recommend to use the [updated SplitLab](https://robporritt.wordpress.com/software/)
@@ -107,7 +107,7 @@ If you make use of StackSplit please acknowledge the following contributing pape
 - **_Roy, C., Winter, A., Ritter, J. R. R., Schweitzer, J. (2017)_**, On the improvement of SKS splitting measurements by the simultaneous inversion of multiple waveforms (SIMW), *Geophysical Journal International*, 208, 1508-1523, https://doi.org/10.1093/gji/ggw470.
 - **_Silver, P. G. & Chan, W. W. (1991)_**, Shear wave splitting and subcontinental mantle deformation. *Journal of Geophysical Research*, 96, 16429-16454, https://doi.org/10.1029/91JB00899.
 - **_Wolfe, C. J. & Silver, P. G. (1998)_**, Seismic anisotropy of oceanic upper mantle: Shear wave splitting methodologies and observations, *Journal of Geophysical Research* 103(B1), 749-771, https://doi.org/10.1029/97JB02023.
-- **_Wüstefeld, A. (2007)_**, Methods and applications of shear wave splitting: The East European Craton. Ph.D. thesis, *Univ. de Montpellier*, France, http://splitting.gm.univ-montp2.fr/.
+- **_Wüstefeld, A. (2007)_**, Methods and applications of shear wave splitting: The East European Craton. Ph.D. thesis, *Univ. de Montpellier*, France, https://splitting.gm.univ-montp2.fr.
 
 
 ## Installation

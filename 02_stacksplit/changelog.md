@@ -2,7 +2,7 @@
 
 ## Release dev
 
-> Changes are undependent from the original [StackSplit repo](https://github.com/michaelgrund/stacksplit).
+> Changes are independent from the original [StackSplit repo](https://github.com/michaelgrund/stacksplit).
 > For the changes included in the original StackSplit repo, the related PRs are marked with an asterix (*).
 
 **StackSplit-related**

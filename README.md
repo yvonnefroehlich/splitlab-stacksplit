@@ -13,10 +13,10 @@
 
 | Software | Language | Description | Author |
 | --- | --- | --- | --- |
-| [SplitRacer](https://www.miriam-reiss.com/splitracer) | MATLAB | Semi-automated workflow | Miriam C. Reiss |
-| [SplitPy](https://github.com/paudetseis/SplitPy) | Python | Based on SplitLab | Pascal Audet & Andrew Schaeffer |
-| [SWSPy](https://github.com/TomSHudson/swspy) | Python | Automated workflow | Tom Hudson, Andrew M. Walker & Joseph Asplet|
-| [STADIUM-Py](https://github.com/earthinversion/STADIUM-Py) | Python | Fully automated workflow | Utpal Kumar & Cédric Legendre |
-| [Pytheas](https://github.com/ispingos/pytheas-splitting) | Python | Local shear-wave splitting studies | Ioannis Spingos & George Kaviris|
-| [Sheba](https://github.com/jwookey/sheba) | Fortran |  | James Wookey |
-| [SeisSplit.jl](https://github.com/anowacki/SeisSplit.jl) | Julia |  | Andy Nowacki |
+| [SplitRacer](https://www.miriam-reiss.com/splitracer)      | MATLAB  | Semi-automated workflow            | M C Reiss                     | 
+| [SplitPy](https://github.com/paudetseis/SplitPy)           | Python  | Based on SplitLab                  | P Audet, A Schaeffer           |
+| [SWSPy](https://github.com/TomSHudson/swspy)               | Python  | Automated workflow                 | T Hudson, A M Walker, J Asplet |
+| [STADIUM-Py](https://github.com/earthinversion/STADIUM-Py) | Python  | Fully automated workflow           | U Kumar, C Legendre            |
+| [Pytheas](https://github.com/ispingos/pytheas-splitting)   | Python  | Local shear-wave splitting studies | I Spingos, G Kaviris           |
+| [Sheba](https://github.com/jwookey/sheba)                  | Fortran |                                    | J Wookey                       |
+| [SeisSplit.jl](https://github.com/anowacki/SeisSplit.jl)   | Julia   |                                    | A Nowacki                      |
