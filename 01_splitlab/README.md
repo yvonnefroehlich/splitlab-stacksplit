@@ -3,9 +3,9 @@
 ### Single-event shear wave splitting analyses in MATLAB
 
 > [!NOTE]
-> Updated versions based on [SplitLab 1.2.1](https://robporritt.wordpress.com/software/).
+> * Planed for the end of 2025 🚀!
 >
-> Planed for the end of 2025 🚀!
+> * Updated versions based on [SplitLab 1.2.1](https://robporritt.wordpress.com/software/).
 
 
 ## Currently available versions
@@ -28,3 +28,4 @@
   SplitLab: A shear-wave splitting environment in Matlab.
   *Computers & Geosciences*, 34:515–528.
   https://doi.org/10.1016/j.cageo.2007.08.002.
+
