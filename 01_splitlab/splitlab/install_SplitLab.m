@@ -37,7 +37,7 @@ function install_SplitLab
 %  each user.
 %
 % have fun
-% Andy W�stefeld
+% Andy Wüstefeld
 % September 2006
 
 

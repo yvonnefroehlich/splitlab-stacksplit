@@ -305,7 +305,7 @@ end
 clear tmp*
 
 %% This program is part of SplitLab
-% � 2006 Andreas W�stefeld, Universit� de Montpellier, France
+% © 2006 Andreas Wüstefeld, Université de Montpellier, France
 %
 % DISCLAIMER:
 % 
