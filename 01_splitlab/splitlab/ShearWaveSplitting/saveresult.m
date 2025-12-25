@@ -4,17 +4,19 @@ function saveresult(next)
 global eq thiseq config
 
 %% checking
-null= ~isfield(thiseq,'AnisoNull');
-qual= ~isfield(thiseq,'Q');
+null = ~isfield(thiseq,'AnisoNull');
+qual = ~isfield(thiseq,'Q');
 if any([qual,null])
-    str=[];
+    str = [];
+    % YF 2023-11-04
+    % "strvcat" is not recommended by MATLAB anymore
     if qual
-        str=strvcat(str,'Please select QUALITY of this result');
+        str = char(str,'Please select QUALITY of this result');
     end
     if null
-        str=strvcat(str,'Please select if this result is a NULL');
+        str = char(str,'Please select if this result is a NULL');
     end
-    errordlg(strvcat(str,' ' ,'or select "Discard" in the Result menu...'),'Error');
+    errordlg(char(str,' ','or select "Discard" in the Result menu...'),'Error');
     return
 end
 
@@ -24,7 +26,7 @@ num = thiseq.index;
 %% copy result to permanent "eq" variable
 eq(num).results(n).SplitPhase =  strtrim(thiseq.SplitPhase);
 eq(num).results(n).incline    =  thiseq.tmpInclination;
-eq(num).results(n).inipol     =  thiseq.tmpresult.inipol; 
+eq(num).results(n).inipol     =  thiseq.tmpresult.inipol;
 eq(num).results(n).quality    =  strtrim(thiseq.Q);
 eq(num).results(n).Null       =  strtrim(thiseq.AnisoNull);
 eq(num).results(n).filter     =  thiseq.filter;
@@ -39,21 +41,44 @@ eq(num).results(n).f          =  thiseq.tmpresult.f;
 eq(num).results(n).SNR        =  thiseq.tmpresult.SNR;
 eq(num).results(n).remark     =  thiseq.tmpresult.remark;
 eq(num).results(n).method     =  config.splitoption;
-eq(num).results(n).timestamp  =  datestr(now);
+% YF 2023-11-03
+% "datestr" and "now" are not recommended by MATLAB up on R2022b
+% eq(num).results(n).timestamp  =  datestr(now);
+eq(num).results(n).timestamp  =  char(datetime("now"));
 eq(num).results(n).Cmatrix    =  thiseq.tmpresult.Cmatrix;
 eq(num).results(n).Ematrix    =  thiseq.tmpresult.Ematrix;
 
-% save eq as a mat file for edit/analysis outside of splitlab
-fname = sprintf('%s_eqresults.mat',config.stnname);
-mfilename = fullfile(config.savedir,fname);
-save(mfilename,'eq');
+%============================================================
+%============================================================
+
+% added further output 2016/12/21 -MG-, mat file is saved below
+
+eq(num).results(n).EVmatrix   =  thiseq.tmpresult.EVmatrix;
+eq(num).results(n).Qcut=thiseq.tmpresult.Qcut;
+eq(num).results(n).Tcut=thiseq.tmpresult.Tcut;
+eq(num).results(n).Lcut=thiseq.tmpresult.Lcut;
+eq(num).results(n).Ecut=thiseq.tmpresult.Ecut;
+eq(num).results(n).Ncut=thiseq.tmpresult.Ncut;
+eq(num).results(n).Zcut=thiseq.tmpresult.Zcut;
+
+eq(num).results(n).ndfSC    =  thiseq.tmpresult.ndfSC;
+eq(num).results(n).ndfEV    =  thiseq.tmpresult.ndfEV;
+eq(num).results(n).ndfRC    =  thiseq.tmpresult.ndfRC;
+eq(num).results(n).LevelSC  =  thiseq.tmpresult.LevelSC;
+eq(num).results(n).LevelEV  =  thiseq.tmpresult.LevelEV;
+eq(num).results(n).LevelRC  =  thiseq.tmpresult.LevelRC;
+eq(num).results(n).dttrace    =  thiseq.tmpresult.dttrace;
+
+%============================================================
+%============================================================
+
 
 
 %eq(num).a = thiseq.a;
 %eq(num).f = thiseq.f;
 
 %% SAVE FIGURES ==========================================================
-%change here, if you dont like the figure output (resolution etc)
+% change here, if you don't like the figure output (resolution etc)
 switch config.exportformat
     case '.ai'
         option={ '-dill', '-noui'};
@@ -77,14 +102,14 @@ fname = sprintf('%4.0f.%03.0f.%02.0f_result_%s%s',...
     thiseq.date([1 7 4]), thiseq.SplitPhase, config.exportformat);
 
 
-%check if file alredy exists (phase already split)
+%check if file already exists (phase already split)
 No=2;
 while exist(fullfile(config.savedir, fname),'file') == 2
     fname = sprintf('%4.0f.%03.0f.%02.0f_result_%s[%.0f]%s',...
             thiseq.date([1 7 4]), thiseq.SplitPhase,No, config.exportformat);
     No = No+1;
 end
-    
+
 
 print( option{:}, fullfile(config.savedir,fname));
 
@@ -92,7 +117,7 @@ print( option{:}, fullfile(config.savedir,fname));
 eq(num).results(n).resultplot = fname;
 
 
-%% save seimogramm plots
+%% save seismogram plots
 % %make sure, that LTQ plot is saved
 % if thiseq.system=='ENV';
 %     thiseq.system='LTQ';
@@ -105,6 +130,21 @@ eq(num).results(n).resultplot = fname;
 %     thiseq.date([1 7 4]), thiseq.SplitPhase,config.exportformat);
 % print( ['-f' num2str(fig)], option{:}, fullfile(config.savedir, fname))
 eq(num).results(n).seisplot = '';%fname;
+
+%============================================================
+%============================================================
+
+% code by Rob Porritt, if eq is saved at upper position, the plot name of the
+% last saved measurement is missing
+
+% save eq as a mat file for edit/analysis outside of SplitLab
+fname = sprintf('%s_eqresults.mat',config.stnname);
+mfilename = fullfile(config.savedir,fname);
+save(mfilename,'eq');
+
+%============================================================
+%============================================================
+
 
 
 %% SAVE DATABASE ===========================================================
@@ -119,11 +159,11 @@ close(gcbf)
 
 
 
-%% SAVE 
+%% SAVE
 DATE  = sprintf('%4.0f.%03.0f',thiseq.date(1),thiseq.date(7));
 n     = thiseq.resultnumber;
 
-if strcmp(strtrim(thiseq.AnisoNull),'No') 
+if strcmp(strtrim(thiseq.AnisoNull),'No')
    fname = fullfile(config.savedir,['splitresults_' config.project(1:end-4) '.txt' ]);
 else
    fname = fullfile(config.savedir,['splitresultsNULL_' config.project(1:end-4) '.txt' ]);
@@ -145,25 +185,25 @@ fprintf(fid,'\n%s  %4s  %5s  %6.2f %5.2f [%4.2f %3.1f]  %6.2f  %6.2f    %4.0f<%3
     char(thiseq.Q), char(thiseq.AnisoNull), thiseq.tmpresult.remark);
 fclose(fid);
 
-%% Re-plot Seismogram figure, with recently splited window marked
+%% Re-plot Seismogram figure, with recently split window marked
 SL_SeismoViewer(thiseq.index)
 
 %% This program is part of SplitLab
-% © 2006 Andreas Wüstefeld, Université de Montpellier, France
+% Â© 2006 Andreas WÃ¼stefeld, UniversitÃ© de Montpellier, France
 %
 % DISCLAIMER:
-% 
+%
 % 1) TERMS OF USE
 % SplitLab is provided "as is" and without any warranty. The author cannot be
 % held responsible for anything that happens to you or your equipment. Use it
 % at your own risk.
-% 
+%
 % 2) LICENSE:
 % SplitLab is free software; you can redistribute it and/or modifyit under the
-% terms of the GNU General Public License as published by the Free Software 
-% Foundation; either version 2 of the License, or(at your option) any later 
+% terms of the GNU General Public License as published by the Free Software
+% Foundation; either version 2 of the License, or(at your option) any later
 % version.
 % This program is distributed in the hope that it will be useful, but WITHOUT
-% ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-% FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
+% ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+% FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 % more details.

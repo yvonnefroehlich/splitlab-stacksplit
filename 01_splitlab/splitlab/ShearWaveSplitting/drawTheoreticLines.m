@@ -28,4 +28,4 @@ bazi = [bazi, bazi+180]';
 
 set(handles.theoLines(:,1), 'Xdata',bazi, 'Ydata', phi0, 'Visible', 'on')
 set(handles.theoLines(:,2), 'Xdata',bazi, 'Ydata', dt0, 'Visible', 'on')
-set(handles.Label, 'String', valuestring);
+%set(handles.Label, 'String', valuestring);

@@ -80,7 +80,7 @@ config.phases   = {'P','PP','PPP','Pdiff','PKS','PcP','PcS','SP','S','SS','SKS',
 config.earthmodel='iasp91';%'prem'
 
 config.PaperType    = 'A4';
-config.exportformat = '.pdf'; % default figure export format 
+config.exportformat = '.png'; % default figure export format 
                               % valid strings :
                               %'.ai','.eps', '.fig', '.jpg',  '.pdf',
                               %'.ps','.png', '.tiff'

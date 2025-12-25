@@ -116,7 +116,7 @@ for i = 1:len
         %% add new fields:
         [files, sortindex] = sort_components(F(id));
         new_eq(nn).seisfiles = files';
-        new_eq(nn).offset    = FIsec(id(sortindex))-Omarker(id(sortindex)) - EQsec(i)+config.offset;
+        new_eq(nn).offset = FIsec(id(sortindex)) - Omarker(id(sortindex)) - EQsec(i) + config.offset;
 
         if calculateTTimes
             new_eq(nn).phase = calcphase(config,new_eq(nn));

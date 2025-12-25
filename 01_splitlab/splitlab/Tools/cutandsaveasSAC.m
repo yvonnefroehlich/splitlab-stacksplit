@@ -29,9 +29,9 @@ end
     end
 
 for k=1:length(eq)
-     workbar(k/length(eq),['Processing files for earthqauke ' eq(k).dstr] )   
-     thiseq = eq(k);
-     comps  = readsacs(thiseq.date); %get the earthquakes to be cut ;
+    workbar(k/length(eq),['Processing files for earthqauke ' eq(k).dstr] )   
+    thiseq = eq(k);
+    comps  = readsacs(thiseq.date); %get the earthquakes to be cut ;
     
     cname ='ENZ'; %order of components in stucture (see assignFilesAuto)
     for m=1:3
@@ -43,7 +43,7 @@ for k=1:length(eq)
         tmp  = comps.(cname(m));
         tmp = sl_ch(tmp,...
             'DELTA',  mean(diff(comps.time)),...
-            'O',      comps.origin,...
+			'O',      comps.origin,...
             'B',      comps.time(1),...
             'E',      comps.time(end),...
             'NPTS',   length(comps.time),...
@@ -85,9 +85,11 @@ fclose(fid_log);
 
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [comps]= readsacs(hypotime)
+function [comps] = readsacs(hypotime)
     global config thiseq
-    offset = floor(thiseq.offset*100)/100;
+    % offset = floor(thiseq.offset*100)/100;
+    % %offset = thiseq.offset; %YF for testing 2021/06/24
+	offset = floor(thiseq.offset*10^8)/10^8; % YF SL 1.9.0
 
 %read in
 try
@@ -123,23 +125,30 @@ dt = round(dt*1000)/1000;
 dt = max(dt);
 
 % times relative to origin time
-thestart = max([e(1,1)   n(1,1)   v(1,1)  ])+dt/2;% adding half a sample
-theend   = min([e(end,1) n(end,1) v(end,1)])+dt/2;% for excluding accidential overlap
+thestart = max([e(1,1)   n(1,1)   v(1,1)  ]) +dt/2;% adding half a sample
+% theend   = min([e(end,1) n(end,1) v(end,1)]) + dt/2;% for excluding accidential overlap
+theend   = min([e(end,1) n(end,1) v(end,1)]) -dt/2;% for excluding accidential overlap
+% changed YF 2021/June/21 
+% inconsitency:
+% in SL 1.2.1 ~private/readseis3D.m for theend -dt/2 instead of +dt/2
+% in SL 1.9.0 ~configGUI/readseis3D.m commend like here but no adding or substraction of dt/2
+% in SL 1.9.0 ~Tools/cutandsaveasSAC.m for both thestart and theend +dt/2
+
 
 for pick ={'A' 'F' 'T0' 'T1' 'T2' 'T3' 'T4' 'T5' 'T6'  'T7' 'T8' 'T9'}
-    t=sl_lh(e, char(pick));
+    t = sl_lh(e, char(pick));
     if t~=-12345
-        e=sl_ch(e, char(pick), t - 0);%offE);
+        e = sl_ch(e, char(pick), t - 0);%offE);
     end
 
     t = sl_lh(n, char(pick)) ;
     if t~=-12345
-        n=sl_ch(n, char(pick), t - 0);%offN);
+        n = sl_ch(n, char(pick), t - 0);%offN);
     end
 
     t = sl_lh(v, char(pick)) ;
     if t~=-12345
-        v=sl_ch(v, char(pick), t - 0);%offV );
+        v = sl_ch(v, char(pick), t - 0);%offV );
     end
 end
 
@@ -164,6 +173,6 @@ comps.E    = [comps.time    Eamp(1:len)    e(1:len,3)];
 comps.N    = [comps.time    Namp(1:len)    n(1:len,3)];
 comps.Z    = [comps.time    Zamp(1:len)    v(1:len,3)];
 comps.origin = -thestart; %
-comps.newdate= new;
+comps.newdate = new;
 
 

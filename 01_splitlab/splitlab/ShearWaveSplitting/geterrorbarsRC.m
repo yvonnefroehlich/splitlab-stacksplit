@@ -1,18 +1,18 @@
-function [errbar_phi,errbar_t,Ccrit] = geterrorbars(Tcomp, Cmatrix, Cresult)
+function [errbar_phi,errbar_t,Ccrit, ndf] = geterrorbars(Tcomp, Cmatrix, Cresult)
 % estimate Degrees-of-Freedom and calculate 95% confidence interval
 
 ndf = getndf(Tcomp,length(Tcomp),length(Tcomp));
-HatNDF = ndf/length(Tcomp);%In the absense of correlation, this number should approach 1.0 (HATNDF << 1.0 is bad)
+HatNDF = ndf/length(Tcomp);%In the absence of correlation, this number should approach 1.0 (HATNDF << 1.0 is bad)
 
 
-K = 2;%Nuber of model parameters
+K = 2; % Number of model parameters
 if ndf <=K
     disp('  NDF <= K... There is no resolution of the 95% confidence region; Continuing')
     errbar_phi = [nan nan];
     errbar_t   = [nan nan];
     Ccrit = Cresult;
 else
-    
+
     %fisher transformation
     Z     = atanh(Cresult);
     Zcrit = Z + (  Z*K*sign(Z) / (ndf-K) * inv_f(K,ndf-K)  ) * sqrt(1/(ndf-3));
@@ -48,16 +48,36 @@ function NDF = getndf(S, n, norig)
 % process should be equal to norig.  The true ndf should be less than
 % NORIG
 
-% First apply a cosine taper at the ends (taper length 20% of the time window)
-tap = fliplr(linspace(0,1,n*0.2))';
-A   = S;
-A(1:length(tap))         = A(1:length(tap))         .* (cos(tap*pi)+1)/2;
-A(end-length(tap)+1:end) = A(end-length(tap)+1:end) .* (cos(fliplr(tap)*pi)+1)/2;
+% OLD
+% % First apply a cosine taper at the ends (taper length 20% of the time window)
+% tap = fliplr(linspace(0,1,n*0.2))';
+% A   = S;
+% A(1:length(tap))         = A(1:length(tap))         .* (cos(tap*pi)+1)/2;
+% A(end-length(tap)+1:end) = A(end-length(tap)+1:end) .* (cos(fliplr(tap)*pi)+1)/2;
+
+
+global config
+
+% if StackSplit is in use and SIMW is selected, no taper is applied since
+% concatenated waveforms are already tapered
+if isfield(config,'SS_use_SIMW') && config.SS_use_SIMW==1
+
+    A = S;
+
+% for single event measurements a taper is applied on the trace as before
+elseif (isfield(config,'SS_use_SIMW') && config.SS_use_SIMW==0) || ~isfield(config,'SS_use_SIMW')
+
+    A = S;
+
+    % new taper MG 2016-08-05 since old one generates steps at the end of window
+    w1=window(@tukeywin,length(S),0.2);
+
+    A=w1.*A;
+    A=w1.*A;
+
+end
 
 OUT = fft(A);
-
-
-
 
 %%
 % calculate the Number of Degrees-Of-Freedom of a summed and squared time
@@ -66,36 +86,50 @@ OUT = fft(A);
 % corresponding to the Nyquist frequency.  If A[t] is gaussian distributed
 % then ndf_spect should be the points in the original time series 2*(N-1).
 
+%=================================================================================
+% 2016-07-29 -MG-
+%
+% added modified F4 and NDF to correctly calc degrees of freedom (see Walsh et al., 2013)
+%
+% F4SC & NDFSC are the values calculated with the original definitions
+% implemented in SplitLab which are based on Silver & Chan (1991)
+
+% Walsh, E., R. Arnold and M. K. Savage (2013) "Silver and Chan Revisited", JGR
+%=================================================================================
+
 mag = abs(OUT);
 
 F2 = sum(mag.^2);
 F4 = sum(mag.^4);
 
-F2 = F2-.5*mag(1).^2-.5*mag(end).^2;
-F4 = F4-.5*mag(1).^4-.5*mag(end).^4;
+F2 = F2 - 0.5*mag(1).^2 - 0.5*mag(end).^2;   % same for SC (1991) and Walsh et al., 2013
 
-% based on theory, the following expression should yield
-% the correct number of degrees of freedom.(see appendix of silver
-% and chan, 1990.  In practise, it gives a value that gives
-% a df that is slightly too large.  eg 101 for an original time
-% series of 100.  This is due to the fact that their is a slight
-% positive bias to the estimate using only the linear term.
+F4SC = F4 - 0.5*mag(1).^4 - 0.5*mag(end).^4; % SC (1991) original
+F4 = (4/3)*F4 - mag(1).^4 - mag(end).^4;     % Walsh et al., 2013, adopted from MFAST code (v2.0, http://mfast-package.geo.vuw.ac.nz/)
+                                             % in function zndf.f
 
-NDF = round(2*(2*F2*F2/F4 -1) + 0.5);
+% based on theory, the following expression should yield the correct
+% number of degrees of freedom.(see appendix of Silver & Chan, 1991).
+% In practise, it gives a value that gives a df that is slightly too large,
+% e.g., 101 for an original time series of 100. This is due to the fact
+% that there is a slight positive bias to the estimate using only the
+% linear term.
+
+NDFSC = round(2*(2*F2*F2/F4SC -1) + 0.5); % SC original
+NDF = round(2*(2*F2*F2/F4 -1) + 0.5);   % Walsh et al., 2013
+
 
 if NDF > norig
     error('get_ndf: NDF > NORIG')
     return
 end
 
-
-
 %%
 function data = inv_f(nu1,  nu2)
-%using tablelook up for finding the Inverse of the F cumulative
-%distribution function. First Degree of Freedom in our case is always 2
-%(2 independant parameter: phi, dt. The second degree of fredom was estimated
-% from transverse component
+% using table look up for finding the inverse of the F cumulative
+% distribution function. First degree of freedom in our case is always 2
+% (2 independent parameters: phi, dt. The second degree of fredom was
+% estimated from transverse component
 
 if nu2>100, nu2 = 100; end %using last value in table, no big change
 
