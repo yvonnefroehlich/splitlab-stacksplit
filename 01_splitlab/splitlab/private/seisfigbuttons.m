@@ -1,5 +1,5 @@
 function seisfigbuttons(fig,seismo)
-% create buttons for seismogram plot SL_SeismoViewer and assign callbacks
+%create buttons for seismogram plot SL_SeismoViewer and assings callbacks
 global thiseq
 
 if nargin<1
@@ -53,9 +53,9 @@ uipushtool(ht,'CData',icon.back,...
 
 PFig = findobj('Type','Figure','Name','Particle motion');
 if isempty(PFig)
-    state='off';
+    state='off';  
 else
-    ax = get(PFig,'Children');
+    ax = get(PFig,'Children'); 
     delete(get(ax,'Children'))
     state='on';
 end
@@ -107,25 +107,25 @@ uipushtool(ht,'CData',icon.config,...
 
 
 %% %USER DEFINED function
-% enter the name of your function; must be a string
+%enter the name of your function; mus be a string
 MyFunction =  strcat('warndlg({''Create your own function:'','' '',',...
-    '''* Use function template in SplitLab/PlugIns/template.m '',',...
-    '''* Place it in your MATLAB search path'',',...
-    '''* Modify SplitLab/private/seisfigbuttons.m '',',...
-    '''* Modify SplitLab/private/seisKeyPress.m'','' '',',...
+    '''* Use function template in Splitlab/PlugIns/template.m '',',...
+    '''* Place it in your Matlab search path'',',...
+    '''* Modify Splitlab/private/seisfigbuttons.m '',',...
+    '''* Modify Splitlab/private/seisKeyPress.m'','' '',',...
     '''to access your function''} ,',...
     '''User function'')');
-% create your own symbol: assume an indexed GIF image user.gif is located at c:\
-%it has to be at max 20x20 pixels!
+%create yuor own symbol: assume an indexed GIF image user.gif is located at c:\
+%it has to bee at max 20x20 pixel!
 % uiopen('C:\user.gif',1)
 % %this will gif you the indexmap cdata and a colormap
-% User = ind2rgb(cdata, colormap); % create RGB image
-% Logic = cdata==35; % we are assuming that the transparent color of the image has the index number 35
-% Logic = repmat(Logic,[1,1,3]); % for each colorlayer (Red, Green, Blue)
+% User = ind2rgb(cdata, colormap); %create RGB image
+% Logic = cdata==35; %we are assuming that the transparent color of the image has the index number 35
+% Logic = repmat(Logic,[1,1,3]); %for each colorlayer (Red, Green, Blue)
 % User(Logic)=nan; % image entries with NaNs are 'displayed' transparent
-% % now load the icon.mat variable in /SplitLab/privat/icon.mat
+% %now load the icon.mat variable in /Splitlab/privat/icon.mat
 % icon.user=User;
-% save SplitLab/privat/icon.mat icon
+% save Splitlab/privat/icon.mat icon
 
 uipushtool(ht,'CData',icon.user,...
     'TooltipString','User defined function',...
@@ -162,13 +162,13 @@ uipushtool(ht,'CData',icon.help,...
 %% S U B F U N C T I O N S                                            %%
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%
 function goHome(src,evt)
-global thiseq
+global thiseq  
 %jump close to selected phase
     val  = get(findobj('Tag','PhaseSelector'),'Value');
     t_home = floor(thiseq.phase.ttimes(val)/10)*10 - 30; %~30 seconds before phase; at full 10 seconds
     xlim([t_home t_home+150]) % timewindow of 150 sec
-
-%%
+    
+%%    
 function changelockstate(src,event)
 seis  = findobj('Tag','seismo');
 
@@ -207,7 +207,7 @@ y(:,1) = get(seis(1),'Ydata');
 y(:,2) = get(seis(2),'Ydata');
 
 y = y(ia:ib,:); %only selection
-y = y/max(y(:))*1000;%we normalize and amplify the seismogram, to listen
+y = y/max(y(:))*1000;%we normalize and amplify the seismogram, to listen 
                      %to the same loudness for each seismogram
 
 sound(y, 1000)%shift it in audible frequencies
@@ -215,7 +215,7 @@ sound(y, 1000)%shift it in audible frequencies
 %% ------------------------------------------------------------------
 function exportsac(src,event,seis)
 global thiseq config
-persistent exportdir %make it the same for subsequent calls during this MATLAB session
+persistent exportdir %make it the same for subsequent calls during this matlab session
 
 if isempty(exportdir)
     exportdir = config.savedir;
@@ -235,14 +235,14 @@ time     = get(seis(1), 'Xdata');
 %only export current zoom
 xx     = xlim;
 window = find(xx(1) <=time & time<=xx(2));
-Amp    = Amp(:,window);
+Amp    = Amp(:,window); 
 time   = time(window);
 
 
-if strcmp(thiseq.system,'ENV')
-    cname = 'ENZ';
-elseif strcmp(thiseq.system,'LTQ')
-    cname = 'QTL';
+if thiseq.system=='ENV'
+    cname ='ENZ';
+elseif thiseq.system=='LTQ'
+    cname ='LTQ';
 end
 if ~isfield(thiseq,'a')
     A = -12345;
@@ -259,7 +259,7 @@ JJJ       = dayofyear(D(1), D(2), D(3));
 
 files=[];
 for m=1:3
-    % access structure using dynamic field names
+    %access structure using dynamic filed names
     tmp  = sl_bsac(time,Amp(m,:));
     tmp = sl_ch(tmp,...
         'DELTA',  mean(diff(time)),...
@@ -337,32 +337,12 @@ global config thiseq eq
 button = questdlg({'The current earthquake will be removed', 'from this project database.', 'Are you sure?'}, ...
     'Remove earthquake','Yes','Cancel','Yes');
 switch button
-    case 'Yes'
-
-        %====================================================================
-	    % added by MG 2017-02-17
-
-        if isfield(config,'SS_version')
-
-	      checkSS=findobj('type','figure','name',['StackSplit ' config.SS_version]);
-
-            if ~isempty(checkSS)
-		        warndlg(...
-                        {'Please close StackSplit to perform this operation!',...
-                        'Afterwards simply restart StackSplit to avoid any database conflicts.',...
-                        'Please excuse this inconvenience.'},...
-                        'Close StackSplit!');
-		        return
-            end
-
-        end
-	    %====================================================================
-
+    case 'Yes';
         fname = fullfile(config.savedir,['trashfiles_' config.stnname '.log' ]);
         fid   = fopen(char(fname),'a+');
         fprintf(fid,'%s\n%s\n%s\n',thiseq.seisfiles{1}, thiseq.seisfiles{2}, thiseq.seisfiles{3});
         fclose(fid);
-
+        
         if ispc
             try
                 pathstr = fileparts(mfilename('fullpath'));
@@ -372,29 +352,15 @@ switch button
         end
 
         idx = thiseq.index;
-        L   = [1:idx-1 idx+1:length(eq)];
+        L   = [1:idx-1 idx+1:length(eq)];        
         eq  = eq(L);
         SL_SeismoViewer(idx)
-
-        %====================================================================
-        % added by MG 2017-02-17
-
-        % if an event is deleted after any phase splitting calculation
-        % the variable "eq" is saved at this point, otherwise in StackSplit
-        % the deleted event would still appear in the event list!
-
-        % save eq as a mat file for edit/analysis outside of SplitLab
-        fname = sprintf('%s_eqresults.mat',config.stnname);
-        mfilename2save = fullfile(config.savedir,fname);
-        save(mfilename2save,'eq');
-
-        %====================================================================
-
+        
         databaseViewer = findobj('Type','Figure', 'Name','Database Viewer');
         if ~isempty(databaseViewer)
            SL_databaseViewer
         end
-
+        
     case 'Later'
 end
 
@@ -460,14 +426,14 @@ function localZoomSeismo(hFig,evt,fig,seismo)
 point1 = get(gca,'CurrentPoint');    % button down detected
 finalRect = rbbox;                   % return figure units
 point2 = get(gca,'CurrentPoint');    % button up detected
-point1 = point1(1);                  % extract x and y
+point1 = point1(1);              % extract x and y
 point2 = point2(1);
 p1 = min(point1,point2);             % calculate locations
 offset = abs(point1-point2);         % and dimensions
 x = [p1(1) p1(1)+offset(1) ];
 
 if x(2)-x(1) < 2
-    % prevent exessive zooming smaller than 2 seconds
+    %prevent exessive zooming smaller than 2seconds
     return
 end
 
