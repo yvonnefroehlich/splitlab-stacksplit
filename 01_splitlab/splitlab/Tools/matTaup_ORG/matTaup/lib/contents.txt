@@ -1,2 +1,0 @@
-matTaupClasses.jar  -  Java archive file for matTaup classes only
-matTaup.jar         -  Java archive file including Taup classes
