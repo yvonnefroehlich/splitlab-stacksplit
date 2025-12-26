@@ -44,11 +44,11 @@ import java.util.zip.*;
 
 if nargin~=3
     error('3 input arguments required');
-end;
+end
 
 if isempty(model)
     model='iasp91';
-end;
+end
 
 inArgs{1}='-mod';
 inArgs{2}=model;
@@ -61,8 +61,8 @@ try
     matCurve=MatTauP_Curve.run_curve(inArgs);
 catch
     fprintf('Java exception occurred! Please check input arguments. \n\n');
-    return;
-end;
+    return
+end
 
 tt_curve = [];
 for ii=1:matCurve.length
@@ -71,15 +71,19 @@ for ii=1:matCurve.length
     tt(ii).time=matCurve(ii).time;
     tt(ii).distance=matCurve(ii).dist;
     tt(ii).rayParam=matCurve(ii).rayParam;
-end;
+end
 
-c={'b','r','g','m','c','y', ...
+% c_temp_01 = get(gca,'colororder')
+% c = num2cell(c_temp_01',1)
+c={'y--','r-','b-','g-','k--','y', ... %'b','g','r','c','m','y', ...
+   'b:','r:','g:','m:','c:','y:', ...
    'b--','r--','g--','m--','c--','y--', ... 
-   'b-.','r-.','g-.','m-.','c-.','y-.', ...
-   'b:','r:','g:','m:','c:','y:'};
+   'b-.','r-.','g-.','m-.','c-.','y-.'};
+
 p={};
 if nargout==0
     clf;hold on;box on
+    grid on
     n=0;
     for ii=1:length(tt)
         if length(tt(ii).distance)>1
@@ -90,15 +94,55 @@ if nargout==0
             if ~isempty(k) % shadow zone
                 temp_dist(k)=nan;
                 temp_time(k)=nan;
-            end;
-            plot(temp_dist,temp_time,c{ii});
+            end
+            
+            idx = mod(ii-1, length(c))+1;
+            
+            
+            pp(n)=plot(temp_dist,temp_time,c{idx},'LineWidth',1.5);
+            color = c{idx}(1);
+            switch color
+                case 'y'
+                    set(pp(n),'color',[1 .7 0])
+                case 'c'
+                    set(pp(n),'color',[0 .8 .8])
+                case 'g'
+                    set(pp(n),'color',[0 .7 0])
+            end
+                    
             p{n}=tt(ii).phaseName;
-        end;
-    end;
-    legend(p,2);
-    xlabel('Distance (deg)');
-    ylabel('Travel Time (s)');
+        end
+    end
+    
+    set(pp, 'UserData',pp, 'ButtonDownFCN', @highlight)
+    
+    xlabel('epicentral distance / \circ');
+    ylabel('travel time / s');
+    
+    %YF 01.05.2020
+    win        = [90 140];
+    yy = [ylim fliplr(ylim)];
+    xx = [win(1) win(1) win(2) win(2)];
+    f  = fill(xx, yy, [0.8 1 0.8], 'EdgeColor','none');
+    set(get(get(f,'Annotation'),'LegendInformation'),'IconDisplayStyle','off') %added to exclude from legend
+    c = get(gca,'children');
+    set(gca,'children',[c(2:end);c(1)],'Layer','Top','XMinorTick','on');
+
+    axis([60 180 1000 2400])
+    
+    legend(p,'location','EastOutside'); %change because of error; orginal: p,2,'location','EastOutside'
+
     return;
-end;
+end
 
 tt_curve=tt;
+
+
+
+
+%% 
+function highlight(src,evt)
+disp(get(src, 'DisplayName'));
+ud = get(src,'UserData');
+set(ud,'LineWidth',1)
+set(src,'LineWidth',2)

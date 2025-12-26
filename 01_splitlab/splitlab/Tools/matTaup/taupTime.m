@@ -50,11 +50,11 @@ import java.util.zip.*;
 
 if nargin<5
     error('At least 5 input arguments required');
-end;
+end
 
 if isempty(model)
     model='iasp91';
-end;
+end
 
 inArgs{1}='-mod';
 inArgs{2}=model;
@@ -73,7 +73,7 @@ while (ii<=length(varargin))
     case {'deg','km'}
         if ~(isa(varargin{ii+1},'double') & length(varargin{ii+1})==1)
             error('  Incompatible value for option %s !',varargin{ii});
-        end;
+        end
         inArgs{n_inArgs+1}=['-' varargin{ii}];
         inArgs{n_inArgs+2}=num2str(varargin{ii+1});
         n_inArgs=n_inArgs+2;
@@ -82,7 +82,7 @@ while (ii<=length(varargin))
     case {'sta','station'}
         if ~(isa(varargin{ii+1},'double') & length(varargin{ii+1})==2)
             error('  Incompatible value for option %s !',varargin{ii});
-        end;
+        end
         inArgs{n_inArgs+1}='-sta';
         temp=varargin{ii+1};
         inArgs{n_inArgs+2}=num2str(temp(1));
@@ -93,7 +93,7 @@ while (ii<=length(varargin))
     case {'evt','event'}
         if ~(isa(varargin{ii+1},'double') & length(varargin{ii+1})==2)
             error('  Incompatible value for option %s !',varargin{ii});
-        end;
+        end
         inArgs{n_inArgs+1}='-evt';
         temp=varargin{ii+1};
         inArgs{n_inArgs+2}=num2str(temp(1));
@@ -103,11 +103,11 @@ while (ii<=length(varargin))
         evt=1;
     otherwise
         error('  Unknown option %s \n',varargin{ii});
-    end; %switch
-end; %for
+    end %switch
+end %for
 if ~(dist | (sta & evt))
     error('  Event/source locations or distance not specified !');
-end;
+end
 
 %disp(inArgs);
 
@@ -115,19 +115,19 @@ try
     arrivals=MatTauP_Time.run_time(inArgs);
 catch
     error('Java exception occurred! Please check model name.');
-end;
+end
 
 if arrivals.length==0
     fprintf('   Phases do not exist at specified distance!\n');
-end;
+end
 
 if nargout==0
     for ii=1:arrivals.length
         fprintf('  Phase: %-10s  Time: %.3f(s) \n', ...
             char(arrivals(ii).getName),arrivals(ii).getTime);
-    end;
+    end
     return;
-end;
+end
 
 tt = [];
 for ii=1:arrivals.length
@@ -136,4 +136,4 @@ for ii=1:arrivals.length
     tt(ii).srcDepth=arrivals(ii).getSourceDepth;
     tt(ii).phaseName=char(arrivals(ii).getName);
     tt(ii).rayParam=arrivals(ii).getRayParam;
-end;
+end
