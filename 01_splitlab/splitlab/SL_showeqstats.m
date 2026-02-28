@@ -59,8 +59,8 @@ uimenu(m4,'Label',  'Print current figure', 'Callback','printdlg(gcbf)');
 
 pos = get(gcf,'Position');
 pos = [fix(pos(3)/2-150) fix(pos(4)/2-25) 300 50];
-msg = uicontrol('Style','Text','Units','Pixel','Position',pos,...
-    'String','Please wait...','FontSize',20, 'BackgroundColor', get(gcf,'Color'));
+%msg = uicontrol('Style','Text','Units','Pixel','Position',pos,...
+  %  'String','Please wait...','FontSize',20, 'BackgroundColor', get(gcf,'Color'));
 drawnow
 
 %% Map
@@ -79,17 +79,15 @@ end
 ax = subplot(1,2,2,'Parent',eqfig);
 axes(ax);
 % Checks for existance of mapping toolkit
-%if license('test', 'MAP_Toolbox')
-if (1 == 0)
-    ax             = axesm('eqdazim','origin',[config.slat,config.slong]);
+if license('test', 'MAP_Toolbox')
+    ax = axesm('eqdazim','origin',[config.slat,config.slong]);
     plotm(PBlat, PBlong, 'LineStyle','-','Linewidth',1,'Tag','Platebounds','Color',[1.2 1 1]*.8)
 else
     %ax = axes('eqdazim','origin',[config.slat,config.slong]);
     %plot(PBlat, PBlong, 'LineStyle','-','Linewidth',1,Color',[1.2 1 1]*.8)
 end
 
-%if license('test', 'MAP_Toolbox')
-if (1 == 0)
+if license('test', 'MAP_Toolbox')
     if simple==1
         %%simple plotting; faster for large amount of eqs
         %%use this if topography is plotted using the meshm line (see above)
@@ -101,32 +99,24 @@ if (1 == 0)
         %This takes more computational time, but results in fancy plots :-)
         c    = fillm(lat   ,long  ,'FaceColor',[1 1 1]*.85,'EdgeColor','none','Tag','Continents');
 
-        L = 20;%number of colors in colorbar
-        cmap= hot(30);
+        L = 30; %20 %number of colors in colorbar
+        cmap = flipud( crameri('lajolla',L) ); %hot(30);
         colormap(cmap(5:27,:))
 
         mini = floor(min([eq(:).depth])); 
         maxi = ceil(max([eq(:).depth]));
-        mini= round(mini/10)*10;
-        maxi= round(maxi/10)*10;
+        mini= 0; %round(mini/10)*10;
+        maxi= 700; %round(maxi/10)*10;
         if maxi-mini < 100
-            caxis([mini mini+100]);%colorscale of markers 
+            caxis([mini mini+100]); %colorscale of markers 
         else
             caxis([mini maxi])
         end
-
-        pos   = get(gca,'Position');
-        cbheight = pos(4)*.5; %colobar options
-        cbwidth  = .015;
-        cbx      = (pos(1)+pos(3))*1.035;
-        cby      = (pos(2))+cbheight/2;
-        cb       = colorbar('ylim',caxis,'position',[cbx, cby, cbwidth, cbheight],'Ydir','reverse');
-        xlabel(cb,'depth');
-
+        
         la  = [eq(:).lat]';
         lo  = [eq(:).long]';
-        siz = [eq(:).Mw]'.^10;    % make marker size more dependend on magnidude: enhance to power of 10
-        siz = 100*siz/min(siz) + config.Mw(1)^2;% area of each marker is determined by the values (in points^2) 
+        siz = [eq(:).Mw]'.^10; %make marker size more dependend on magnidude: enhance to power of 10
+        siz = 100*siz/min(siz) + config.Mw(1)^2; %area of each marker is determined by the values (in points^2) 
         col = [eq(:).depth]';
         e = scatterm(la, lo , siz, col ,'.');
     end
@@ -134,41 +124,74 @@ if (1 == 0)
 
     [latlow,lonlow]= scircle1(config.slat, config.slong, SKSwin(1));
     [latup,lonup]  = scircle1(config.slat, config.slong, SKSwin(2));
-    f(1) = plotm(latlow, lonlow, '--', 'Color',circleColor, 'linewidth',1);%SKSwindow
-    f(2) = plotm(latup , lonup , '--', 'Color',circleColor, 'linewidth',1);
+    f = plotm(latlow, lonlow, '--', 'Color',circleColor, 'linewidth',1.5); %SKSwindow
+    g = plotm(latup , lonup , '--', 'Color',circleColor, 'linewidth',1.5);
 
     %station marker
-    b   = plotm(config.slat, config.slong,'k^','MarkerFaceColor','r','MarkerSize',8);
+    b   = plotm(config.slat,config.slong,'kv','LineWidth',1.2, ...
+                'MarkerFaceColor',[255 215 0]/265,'MarkerSize',24); %y r %14
 
-    %% plot annotation
-    if simple 
-        stnnameColor = 'y';
-    else
-
-    end
-    t(3)=textm(...
-        config.slat-3, config.slong, config.stnname,...
-        'color', stnnameColor,...
-        'horizontalalignment','center',...
-        'verticalalignment','top',...
-        'FontWeight','demi');
-
+    %plot annotation
     dates = [[eq(1).dstr] ' -- ' [eq(end).dstr]];
     wmin  = [num2str(SKSwin(1)) '\circ'];
     wmax  = [num2str(SKSwin(2)) '\circ'];
-    title({['Earthquakes in window  [' wmin ' - ' wmax ,...
-        ']  around station ' config.stnname],...
-        [  dates ],...
-        [num2str(config.Mw(1)) ' \leq M_w \leq ' num2str(config.Mw(2))],...
-        [num2str(config.z_win(1)) ' \leq depth \leq ' num2str(config.z_win(2))]})
 
-    t(1) = textm(latup(50) ,lonup(50),wmax, 'verticalalignment','top','horizontalalignment',   'center', 'Color', circleColor);
-    t(2) = textm(latlow(50),lonlow(50),wmin,'verticalalignment','Bottom','horizontalalignment','center', 'Color', circleColor);
+    t(1) = textm(latup(50) ,lonup(50),wmax, ...
+        'verticalalignment','Bottom','horizontalalignment','center', ...
+        'Color', circleColor,'FontWeight','bold','FontSize',16);
+    t(2) = textm(latlow(50),lonlow(50),wmin, ...
+        'verticalalignment','Bottom','horizontalalignment','center', ...
+        'Color', circleColor,'FontWeight','bold','FontSize',16);
 
     %gridm on
     framem('FLinewidth',2,'FFaceColor','w')
     axis off
-    
+ 
+
+    %save without colorbar and without station lable - requiers MATLAB2020a+
+    background_clo = 'none';
+    filename = '_EQstats_resu_map_nolegend_nostation_transparent';
+    exportgraphics(ax,[config.stnname filename '.png'],'Resolution',720)
+    exportgraphics(ax,[config.stnname filename '.pdf'],'BackgroundColor',background_clo,'ContentType','vector')
+    exportgraphics(ax,[config.stnname filename '.eps'],'BackgroundColor',background_clo,'ContentType','vector')
+
+
+    if simple 
+        stnnameColor = 'y';
+    end
+    t(3)=textm(...
+        config.slat-14, config.slong, config.stnname,... %3 config.stnname %7
+        'color',[0.6350 0.0780 0.1840], ...%stnnameColor,...
+        'horizontalalignment','center',...
+        'verticalalignment','top',...
+        'FontWeight','bold',... %demi
+        'FontSize',26); %14
+
+        %save without colorbar and with station lable - requiers MATLAB2020a+
+        background_clo = 'none';
+        filename = '_EQstats_resu_map_nolegend_transparent';
+        exportgraphics(ax,[config.stnname filename '.png'],'Resolution',720)
+        exportgraphics(gcf,[config.stnname filename '.pdf'],'BackgroundColor',background_clo,'ContentType','vector')
+        exportgraphics(gcf,[config.stnname filename '.eps'],'BackgroundColor',background_clo,'ContentType','vector')
+   
+        pos   = get(gca,'Position');
+        cbheight = pos(4)*0.4; %*.5; %colobar options
+        cbwidth  = .015;
+        cbx      = (pos(1)+pos(3))*1.035;
+        cby      = (pos(2))+cbheight/2;
+        % cb       = colorbar('ylim',caxis,'position',[cbx, cby, cbwidth, cbheight],'Ydir','reverse');
+        cb       = colorbar('ylim',caxis,'location','eastoutside'); %'southoutside')
+        set(gca,'FontSize',14)
+        xlabel(cb,'hypocentral depth / km','FontSize',14);
+
+    %save with colorbar - requiers MATLAB2020a+
+    background_clo = 'none';
+    filename = '_EQstats_resu_map_vert';
+    exportgraphics(gcf,[config.stnname filename '.png'],'Resolution',720)
+    exportgraphics(gcf,[config.stnname filename '.pdf'],'BackgroundColor',background_clo,'ContentType','vector')
+    exportgraphics(gcf,[config.stnname filename '.eps'],'BackgroundColor',background_clo,'ContentType','vector')
+
+
 else  % Quick and dirty without mapping toolbox
     hold on
     % matlab structures included with this distribution
@@ -195,22 +218,30 @@ else  % Quick and dirty without mapping toolbox
     %station marker
     i = plot(config.slong, config.slat,'k^','MarkerFaceColor','r','MarkerSize',8);
     axis([-180 180 -90 90])
-    ylabel('Latitude');
-    xlabel('Longitude');
-    legend([i,h,f],'Station','Earthquakes','Plate Boundaries');
+    ylabel('latitude');
+    xlabel('longitude');
+    legend([i,h,f],'station','earthquakes','plate boundaries');
     cb = colorbar('SouthOutside');
-    xlabel(cb,'Elevation (km)');
+    xlabel(cb,'elevation / km');
 %     pos   = get(ax,'Position');
 %     cbheight = pos(4)*.5; %colobar options
 %     cbwidth  = .015;
 %     cbx      = (pos(1)+pos(3))*1.035;
 %     cby      = (pos(2))+cbheight/2;
 %     cb       = colorbar('ylim',caxis,'position',[cbx, cby, cbwidth, cbheight],'Ydir','reverse');
-%     xlabel(cb,'depth');
+%     xlabel(cb,'hypocentral depth');
 
 
     hold off
 end
+
+
+set(gca,'FontSize','default')
+title({['earthquakes in window  [' wmin ' - ' wmax ']  around station ' config.stnname],...
+    [dates],...
+    [num2str(config.Mw(1)) ' \leq M_w \leq ' num2str(config.Mw(2))],...
+    [num2str(config.z_win(1)) ' km \leq hypocentral depth \leq ' num2str(config.z_win(2)) ' km']})
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Histogram
@@ -231,11 +262,13 @@ text(bin_center,n, num2str(n'),...
     'Fontsize',7);
 xlim([0 360])
 set(gca,'Xtick',0:45:360)
-xlabel('Backazimuth [degrees] ')
-ylabel({'Number of events',['total: ' num2str(length([eq(:).lat]))]})
-title({['Histogram of back-azimuthal earthquake distribution around ' config.stnname],
-    ['Earthquake window: ' num2str(SKSwin)]})
-legend([hbar,bar2],'Azimuth','BackAzimuth')
+xlabel('backazimuth / \circ')
+ylabel({'number of events',['total: ' num2str(length([eq(:).lat]))]})
+title({['histogram of back-azimuthal earthquake distribution around ' config.stnname],...
+       ['earthquakes in window [' wmin ' - ' wmax ']']}) %around station ' config.stnname]})
+       %['Earthquake window: ' num2str(SKSwin)]})
+legend([hbar,bar2],'azimuth','backazimuth')
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -264,7 +297,18 @@ text(x,y, num2str(n'),...
     'Fontsize',7);
 
 %%
-delete(msg)
+%delete(msg)
+
+
+%save complet figure - requiers MATLAB 2020a+
+background_clo = 'none';
+filename = '_EQstats_resu_all';
+exportgraphics(gcf,[config.stnname filename '.png'],'Resolution',720)
+exportgraphics(gcf,[config.stnname filename '.pdf'],'BackgroundColor',background_clo)
+exportgraphics(gcf,[config.stnname filename '.eps'],'BackgroundColor',background_clo)
+
+
+
 %% This program is part of SplitLab
 % © 2006 Andreas Wüstefeld, Université de Montpellier, France
 %

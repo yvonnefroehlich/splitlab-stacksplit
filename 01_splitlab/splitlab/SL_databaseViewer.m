@@ -139,7 +139,7 @@ end
 delete(tmp)
 set(h.dlg, 'ResizeFcn',@localResizeFcn)
 %% Map
-SL_Earthview([], [], [], [],1);
+%SL_Earthview([], [], [], [],1); %commanted YF 23.01.2021
 
 
 %END OF PROGRAMM
@@ -198,9 +198,9 @@ set(r_box,'String',outstr, 'value', 1,'UserData',L)
 %% Map
 if length(val)==1
     Mw=round([eq(val).Mw]*10)/10;
-    SL_Earthview([eq(val).lat], [eq(val).long], Mw, [eq(val).depth], [eq(val).date(2)]);
+    %SL_Earthview([eq(val).lat], [eq(val).long], Mw, [eq(val).depth], [eq(val).date(2)]); %commanted YF 23.01.2021
 else
-    SL_Earthview([eq(val).lat], [eq(val).long], ['*'], ['*'], 0);
+    %SL_Earthview([eq(val).lat], [eq(val).long], ['*'], ['*'], 0); %commanted YF 23.01.2021
 end
 
 

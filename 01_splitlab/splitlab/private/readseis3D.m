@@ -49,7 +49,8 @@ F = mean(F(:) + thiseq.offset(:));
 
 %% shift time vector
 %offset is negativ, if file begins before origin time
-offset = floor(thiseq.offset*100)/100;
+% offset = floor(thiseq.offset*100)/100;
+offset = floor(thiseq.offset*10^8)/10^8; % YF SL 1.9.0
 e(:,1) = e(:,1) + offset(1);
 n(:,1) = n(:,1) + offset(2);
 v(:,1) = v(:,1) + offset(3);
@@ -74,8 +75,10 @@ end
 dt=max(dt);
 
 %% times relative to origin time
-thestart = max([e(1,1)   n(1,1)   v(1,1)  ])+dt/2;% adding half a sample
-theend   = min([e(end,1) n(end,1) v(end,1)])-dt/2;% for excluding accidential overlap
+thestart = max([e(1,1)   n(1,1)   v(1,1)  ]) +dt/2;% adding half a sample
+theend   = min([e(end,1) n(end,1) v(end,1)]) -dt/2;% for excluding accidential overlap
+% YF 2021 June 21 different to SL 1.2.1 ~Tools/cutandsaveasSAC.m
+% see comment there (~ line 126)
 
 if thestart>theend
     Err =errordlg({['Files do not cover the same time window at earthquake #' num2str(config.db_index)],...

@@ -1,6 +1,7 @@
 % Splitlab Configureation GUI helper function
 
-Plist={'P','Pdiff','PP','PPP','PcP','PcS','ScS','ScP','PS','SP','S','Sdiff','SS','SKP','PKS','SKS','SKKS','SKiKS','sSKS','pSKS'};
+Plist={'P','Pdiff','PP','PPP','PcP','PcS','ScS','ScP','PS','SP','S',...
+       'Sdiff','SS','SKP','PKS','PKKS','SKS','SKKS','SKiKS','sSKS','pSKS'};
 
 if isempty(config.phases)
     phaseval=15;

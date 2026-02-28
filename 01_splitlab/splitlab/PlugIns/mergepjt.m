@@ -1,5 +1,5 @@
 function  mergepjt(file1, file2)
-% Merge the two Splitlab projects file1 and file2 to a new project
+% Merge the two SplitLab projects file1 and file2 to a new project
 % file1 and file2 contains the complete path to the projects to be joined.
 % In fact file2 is appended to file1 and the whole is saved as a new
 % project. The configuration of file1 persists.
@@ -41,7 +41,7 @@ for k = 1:length(pjt2.eq)
     eq(L1+k) = pjt2.eq(k);
 end
 
-m = msgbox(sprintf('Succesfully merged the two files. New project has now %.0f earthquakes\n', length(eq)));
+m = msgbox(sprintf('Successfully merged the two files. New project has now %.0f earthquakes\n', length(eq)));
 waitfor(m)
 
 

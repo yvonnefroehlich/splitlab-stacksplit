@@ -36,22 +36,22 @@ panel1 = uipanel('units','normalized',  'Position',[.025 .39  .96 .36],  'Backgr
 panel2 = uipanel('units','normalized',  'Position',[.025 .015 .96 .36],  'BackgroundColor', 'w', 'BorderType', 'line', 'HighlightColor','k');
 
 %clf
-axSeis     = axes('Parent',gcf,'units','normalized', 'position',[.08 .78 .19 .2], 'Box','on', 'Fontsize',fontsize);
-axSeis(2)  = axes('Parent',gcf,'units','normalized', 'position',[.80 .8 .15 .16], 'Box','on', 'Fontsize',fontsize);
+axSeis     = axes('Parent',gcf,'units','normalized', 'position',[.17 .78 .19 .20], 'Box','on', 'Fontsize',fontsize);
+axSeis(2)  = axes('Parent',gcf,'units','normalized', 'position',[.72 .80 .15 .16], 'Box','on', 'Fontsize',fontsize);
 
-axRC(1) = axes('Parent',panel1,'units','normalized', 'position',[.02 .05 .25  .9], 'Box','on', 'Fontsize',fontsize);
-axRC(2) = axes('Parent',panel1,'units','normalized', 'position',[.30 .05 .25  .9], 'Box','on', 'Fontsize',fontsize);
-axRC(3) = axes('Parent',panel1,'units','normalized', 'position',[.52 .05 .25  .9], 'Box','on', 'Fontsize',fontsize);
-axRC(4) = axes('Parent',panel1,'units','normalized', 'position',[.76 .05 .22  .9], 'Box','on', 'Fontsize',fontsize,'Layer','top');
+axRC(1) = axes('Parent',panel1,'units','normalized', 'position',[.14 .16 .17 .70], 'Box','on', 'Fontsize',fontsize);
+axRC(2) = axes('Parent',panel1,'units','normalized', 'position',[.34 .16 .17 .70], 'Box','on', 'Fontsize',fontsize);
+axRC(3) = axes('Parent',panel1,'units','normalized', 'position',[.51 .16 .17 .70], 'Box','on', 'Fontsize',fontsize);
+axRC(4) = axes('Parent',panel1,'units','normalized', 'position',[.70 .16 .17 .70], 'Box','on', 'Fontsize',fontsize,'Layer','top');
 
-axSC(1) = axes('Parent',panel2,'units','normalized', 'position',[.02 .05 .25  .9], 'Box','on', 'Fontsize',fontsize);
-axSC(2) = axes('Parent',panel2,'units','normalized', 'position',[.30 .05 .25  .9], 'Box','on', 'Fontsize',fontsize);
-axSC(3) = axes('Parent',panel2,'units','normalized', 'position',[.52 .05 .25  .9], 'Box','on', 'Fontsize',fontsize);
-axSC(4) = axes('Parent',panel2,'units','normalized', 'position',[.76 .05 .22  .9], 'Box','on', 'Fontsize',fontsize,'Layer','top');
+axSC(1) = axes('Parent',panel2,'units','normalized', 'position',[.14 .16 .17 .70], 'Box','on', 'Fontsize',fontsize);
+axSC(2) = axes('Parent',panel2,'units','normalized', 'position',[.34 .16 .17 .70], 'Box','on', 'Fontsize',fontsize);
+axSC(3) = axes('Parent',panel2,'units','normalized', 'position',[.51 .16 .17 .70], 'Box','on', 'Fontsize',fontsize);
+axSC(4) = axes('Parent',panel2,'units','normalized', 'position',[.70 .16 .17 .70], 'Box','on', 'Fontsize',fontsize,'Layer','top');
 
 
 % header axes:
-axH    = axes('Parent',gcf,'units','normalized',  'Position',[.27 .8 .46 .14]);
+axH    = axes('Parent',gcf,'units','normalized',  'Position',[.33 .8 .46 .14]);
 axis off
 
 
