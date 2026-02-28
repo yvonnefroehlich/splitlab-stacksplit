@@ -1,6 +1,5 @@
 # SplitLab & StackSplit
 
-
 ## Updated versions of
 
 - [01_splitlab](https://github.com/yvonnefroehlich/splitlab-stacksplit/tree/main/01_splitlab):
@@ -8,6 +7,8 @@
 - [02_stacksplit](https://github.com/yvonnefroehlich/splitlab-stacksplit/tree/main/02_stacksplit):
   **StackSplit** ([**_Grund 2017_**](https://doi.org/10.1016/j.cageo.2017.04.015)) based on [StackSplit v3.0](https://github.com/michaelgrund/stacksplit/releases/tag/v3.0)
 
+> [!NOTE]
+> Changes are **not** contributed to the original repositories; compatibility is not guaranteed.
 
 ## Related topics
 
