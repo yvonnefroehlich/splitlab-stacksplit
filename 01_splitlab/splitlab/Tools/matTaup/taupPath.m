@@ -58,11 +58,11 @@ import java.util.zip.*;
 
 if nargin<5
     error('At least 5 input arguments required');
-end;
+end
 
 if isempty(model)
     model='iasp91';
-end;
+end
 
 inArgs{1}='-mod';
 inArgs{2}=model;
@@ -79,18 +79,18 @@ ii=1;
 while (ii<=length(varargin))
     switch lower(varargin{ii})
     case {'deg','km'}
-        if ~(isa(varargin{ii+1},'double') & length(varargin{ii+1})==1)
+        if ~(isa(varargin{ii+1},'double') && length(varargin{ii+1})==1)
             error('  Incompatible value for option %s !',varargin{ii});
-        end;
+        end
         inArgs{n_inArgs+1}=['-' varargin{ii}];
         inArgs{n_inArgs+2}=num2str(varargin{ii+1});
         n_inArgs=n_inArgs+2;
         ii=ii+2;
         dist=1;
     case {'sta','station'}
-        if ~(isa(varargin{ii+1},'double') & length(varargin{ii+1})==2)
+        if ~(isa(varargin{ii+1},'double') && length(varargin{ii+1})==2)
             error('  Incompatible value for option %s !',varargin{ii});
-        end;
+        end
         inArgs{n_inArgs+1}='-sta';
         temp=varargin{ii+1};
         inArgs{n_inArgs+2}=num2str(temp(1));
@@ -99,9 +99,9 @@ while (ii<=length(varargin))
         ii=ii+2;
         sta=1;
     case {'evt','event'}
-        if ~(isa(varargin{ii+1},'double') & length(varargin{ii+1})==2)
+        if ~(isa(varargin{ii+1},'double') && length(varargin{ii+1})==2)
             error('  Incompatible value for option %s !',varargin{ii});
-        end;
+        end
         inArgs{n_inArgs+1}='-evt';
         temp=varargin{ii+1};
         inArgs{n_inArgs+2}=num2str(temp(1));
@@ -111,11 +111,11 @@ while (ii<=length(varargin))
         evt=1;
     otherwise
         error('  Unknown option %s \n',varargin{ii});
-    end; %switch
-end; %for
+    end %switch
+end %for
 if ~(dist | (sta & evt))
     error('  Event/source locations or distance not specified !');
-end;
+end
 
 %disp(inArgs);
 
@@ -123,12 +123,12 @@ try
     matArrivals=MatTauP_Path.run_path(inArgs);
 catch
     fprintf('Java exception occurred! Please check input arguments. \n\n');
-    return;
-end;
+    return
+end
 
 if matArrivals.length==0
     fprintf('   Phases do not exist at specified distance!\n');
-end;
+end
 
 tt_path = [];
 for ii=1:matArrivals.length
@@ -143,42 +143,78 @@ for ii=1:matArrivals.length
     tt(ii).path.depth=matArrivals(ii).getMatPath.depth;
     tt(ii).path.latitude=matArrivals(ii).getMatPath.lat;
     tt(ii).path.longitude=matArrivals(ii).getMatPath.lon;
-end;
+end
 
-c={'b','r','g','m','c','y', ...
+c={'c-','m-','b-','g','g--','k--', ...
+   'b:','r:','g:','m:','c:','y:', ...
    'b--','r--','g--','m--','c--','y--', ... 
-   'b-.','r-.','g-.','m-.','c-.','y-.', ...
-   'b:','r:','g:','m:','c:','y:'};
+   'b-.','r-.','g-.','m-.','c-.','y-.'};
 p={};
 h=[];
 if nargout==0 & matArrivals.length>0
     clf;hold on
     [cx,cy]=circle(6371);
-    plot(cx,cy,'k');
+    fill(cx,cy,[.9 .9 .9],'edgecolor','k','linewidth',2); %'w'; self changed
+    [cx,cy]=circle(5961); %410 km; self added
+    fill(cx,cy,[.9 .9 .9],'edgecolor',[0.5 0.5 0.5],'linewidth',1); %'w'; self changed
+    [cx,cy]=circle(5711); %660 km; self added
+    fill(cx,cy,'w','edgecolor',[0.5 0.5 0.5],'linewidth',1);
+    [cx,cy]=circle(3730); %D'' km; self added
+    fill(cx,cy,[.9 .9 .9],'edgecolor',[0.5 0.5 0.5],'linewidth',1);
     [cx,cy]=circle(3480);
-    plot(cx,cy,'color',[0.5 0.5 0.5],'linewidth',2);
+    fill(cx,cy,'w','edgecolor','k','linewidth',2); %[.9 .9 .9], [0.5 0.5 0.5]; self changed
     [cx,cy]=circle(1220);
-    plot(cx,cy,'color',[0.5 0.5 0.5],'linewidth',2);
+    fill(cx,cy,'w','edgecolor','k','linewidth',2); %[.8 .8 .8], [0.5 0.5 0.5]; self changed
     axis off;
     axis equal;
-    for ii=1:matArrivals.length
+    for ii=1:matArrivals.length %2
         fprintf('  Phase: %-10s  Time: %.3f(s) \n', ...
             char(matArrivals(ii).getName),matArrivals(ii).getTime);
         cx=(6371-tt(ii).path.depth).*sin(tt(ii).path.distance/180*pi);
         cy=(6371-tt(ii).path.depth).*cos(tt(ii).path.distance/180*pi);
-        h(ii)=plot(cx,cy,c{ii});
-        plot(cx(1),cy(1),'k*');
-        plot(cx(end),cy(end),'kv','MarkerFaceColor','k');
+        h(ii)=plot(cx,cy,c{ii},'LineWidth',1.5);
+            color = c{ii}(1);
+            switch color
+                case 'y'
+                    set(h(ii),'color',[1 .7 0])
+                case 'c'
+                    set(h(ii),'color',[0 .8 .8])
+                case 'g'
+                    set(h(ii),'color',[0 .7 0])
+            end
+            
+            
+            
+            
+        plot(cx(1),cy(1),'kp','MarkerSize',20,'MarkerFaceColor','y'); %source
+        plot(cx(end)+350,cy(end)-160,'kv','MarkerSize',15,'MarkerFaceColor','r'); %receiver
         p{ii}=tt(ii).phaseName;
-    end;
-    legend(h,p,2);
-    return;
-end;
+    end
+    h(ii+1) = text(cx(end),cy(end),'');
+    set(h, 'UserData',h, 'ButtonDownFCN', @highlight)
+ 
+    legend(h(1:ii), p, 'location','eastoutside'); %self changed because of Matlab error; orginal: p,2 
+    
+    return
+    
+end
+
 
 tt_path=tt;
 
+
+%% --------------------------------------------
 function [cx,cy]=circle(r)
     ang=0:0.002:pi*2;
     cx=sin(ang)*r;
     cy=cos(ang)*r;
-return;
+return
+
+%% --------------------------------------------
+function highlight(src,evt)
+name = (get(src, 'DisplayName'));
+ud = get(src,'UserData');
+set(ud,'LineWidth',1)
+set(src,'LineWidth',2)
+ set(ud(end),'String',[ '  ' name])
+
