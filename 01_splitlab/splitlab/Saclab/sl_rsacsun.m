@@ -112,6 +112,8 @@ OUTPUT(:,1) = XARRAY;
 OUTPUT(:,2) = YARRAY;
 OUTPUT(1:306,3) = h(1:306)';
 
+%dlmwrite([sacfile '_output.txt'],OUTPUT,'delimiter',' '); YF 2021/06/24 for testing
+
 %pad xarray and yarray with NaN if smaller than header field
 if h(80) < 306
   OUTPUT((h(80)+1):306,1) = NaN;

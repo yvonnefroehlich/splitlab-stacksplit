@@ -1,4 +1,3 @@
-
 function splitlab
 % Main window of the SplitLab toolbox, configure the parameters and projects
 % creating the configuration figure of Splitlab
@@ -12,6 +11,7 @@ warning('off','MATLAB:mir_warning_changing_try_catch');
 
 SL_checkversion
 config.version='SplitLab1.2.1';
+
 
 [p,f] = fileparts(mfilename('fullpath'));  % directory of Splitlab
 set(0,'DefaultFigurecolor', [224   223   227]/255 ,...
@@ -176,11 +176,11 @@ rng('shuffle');  % RWP: Matlab will always generate the same sequence of pseudo 
 R = rand(1,2);   
 % if R(1)>.92,    postcardware,      end %Delete this line, if you have already sent a PostCard
 % if R(2)>.92,    acknowledgement,   end
-if R(1) > .5
-    postcardware
-else
-    acknowledgement
-end
+%if R(1) > .5
+%    postcardware
+%else
+%    acknowledgement
+%end
 % This setup promises you get either a postcardware message or the
 % acknowledgement message
 
@@ -305,7 +305,7 @@ end
 clear tmp*
 
 %% This program is part of SplitLab
-% © 2006 Andreas Wüstefeld, Université de Montpellier, France
+% Â© 2006 Andreas WÃ¼stefeld, UniversitÃ© de Montpellier, France
 %
 % DISCLAIMER:
 % 

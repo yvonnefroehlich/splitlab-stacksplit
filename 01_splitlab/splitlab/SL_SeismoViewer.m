@@ -47,13 +47,13 @@ if ~exist(efile,'file')||~exist(nfile,'file')||~exist(zfile,'file')
 end
 
 
-%% show WorldMap, if on screen
-earthfig= findobj('Type','Figure','Tag','EarthView');
-if ~isempty(earthfig)
-  SL_Earthview(thiseq.lat, thiseq.long, thiseq.Mw, thiseq.depth, thiseq.date(2))
-% set(0,'CurrentFigure',seisfig)
-%  set(seisfig,'Position',figpos);
-end
+% %% show WorldMap, if on screen
+% earthfig= findobj('Type','Figure','Tag','EarthView');
+% if ~isempty(earthfig)
+  % SL_Earthview(thiseq.lat, thiseq.long, thiseq.Mw, thiseq.depth, thiseq.date(2))
+% % set(0,'CurrentFigure',seisfig)
+% %  set(seisfig,'Position',figpos);
+% end
 
 %% plot defaults
 scol = [0 0 1; 1 0 0;0 .8 0];% color ordering of seimogramms
@@ -184,6 +184,7 @@ for i=1:3
     subax(i)=axes('units','normalized', 'Position',pos(i,:), 'box','on',...
         'FontSize',fontsize,'FontName','Times', 'XMinorTick','On', 'Parent', seisfig);
     seis(i) = plot(thiseq.Amp.time, thiseq.Amp.time,'Color', scol(i,:),'Tag','seismo', 'Parent',subax(i));%dummy seismogram, initimlies size
+	grid minor %YF 2021-07-07
 end
 xlabel(sprintf('seconds after %02.0f:%02.0f:%05.3f',thiseq.date(4:6)));
 set(subax(1:2),'XTickLabel',[])
@@ -234,6 +235,7 @@ split.hfill = fill(x, [0 1 1 0], acol,...
 
 %% FINAL beautify
 
+grid on %YF 2019-11-17
 set(subax(4),'visible','off')
 title(subax(4),titlestr,'visible','on')
 ylabel(subax(4), sprintf('f_1 = %4.3f Hz   f_2 = %4.3f Hz',thiseq.filter),...
