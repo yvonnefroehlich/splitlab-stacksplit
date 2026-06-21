@@ -142,7 +142,7 @@ uipushtool(ht,'CData',icon.trash,...
      'TooltipString','Play selection',...
      'ClickedCallback',@playseismo);
 uipushtool(ht,'CData',icon.camera,...
-    'TooltipString','save grafic ...',...
+    'TooltipString','save graphic ...',...
     'ClickedCallback',@localSavePicture);
 tmp = mfilename('fullpath');
 tmp = fileparts(tmp);
@@ -472,7 +472,7 @@ offset = abs(point1-point2);         % and dimensions
 x = [p1(1) p1(1)+offset(1) ];
 
 if x(2)-x(1) < 2
-    % prevent exessive zooming smaller than 2 seconds
+    % prevent excessive zooming smaller than 2 seconds
     return
 end
 
