@@ -99,7 +99,7 @@ end
 axH    = axes('units','normalized',  'Position',[.27 .8 .46 .14]);
 axis off
 
-%% SUBFUNTION menu
+%% SUBFUNCTION menu
 
 %% ---------------------------------
 function q_callback(src,~)

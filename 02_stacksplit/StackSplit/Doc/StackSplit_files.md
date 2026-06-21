@@ -25,4 +25,4 @@ open a new issue or PR on GitHub to give comments or address suggestions for imp
 | SS_splitdiagnosticSetHeader.m      | Set header values for diagnostic plot using SIMW |
 | SS_stack_Esurf.m                   | Calculate stacked error surface |
 | SS_stacksplit_start.m              | Main function of StackSplit that is called by button Stacking via SplitLab |
-| unistall_StackSplit.m              | Run in command wdw to uninstall StackSplit from your system |
+| uninstall_StackSplit.m             | Run in command wdw to uninstall StackSplit from your system |
