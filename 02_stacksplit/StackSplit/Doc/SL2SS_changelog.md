@@ -14,3 +14,8 @@ related functions are marked with a asterix (*).
 | seisfigbuttons.m*       | adjustments to avoid database conflicts      | modified | |
 | getFileAndEQseconds.m*  | fixed start time extraction by SplitLab      | modified | v3.0, see Fröhlich et al., 2022) |
 | checkmattaupclass.m*    | improvements to load matTaup Java class      | added    | v4.0 |
+| SL_ttcurves.m           | | modified | |
+| taupColor.m             | | added    | |
+| taupCurve.m             | | modified | |
+| taupLine.m              | | added    | |
+| taupPath.m              | | modified | |
